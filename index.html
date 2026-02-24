@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location de voitures | Vitrine</title>
+    <link rel="stylesheet" href="public/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="#" class="logo">AutoLoc</a>
+            <nav>
+                <a href="#cars">Voitures</a>
+                <a href="#contact">Contact</a>
+                <a href="admin/login.php" class="admin-link">Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Louez votre voiture en toute simplicité</h1>
+                <p class="hero-sub">Large choix de véhicules, tarifs clairs, réservation en ligne.</p>
+                <a href="#cars" class="btn btn-primary">Voir les voitures</a>
+            </div>
+        </section>
+
+        <section id="cars" class="section cars-section">
+            <div class="container">
+                <h2>Notre flotte</h2>
+                <div class="filter-bar">
+                    <button type="button" class="filter-btn active" data-type="">Toutes</button>
+                    <button type="button" class="filter-btn" data-type="Eco">Eco</button>
+                    <button type="button" class="filter-btn" data-type="Berline">Berline</button>
+                    <button type="button" class="filter-btn" data-type="SUV">SUV</button>
+                    <button type="button" class="filter-btn" data-type="Luxe">Luxe</button>
+                </div>
+                <div id="cars-grid" class="cars-grid">
+                    <!-- Rempli par JS -->
+                </div>
+                <p id="cars-loading" class="loading-msg">Chargement…</p>
+                <p id="cars-error" class="error-msg" hidden></p>
+            </div>
+        </section>
+
+        <section id="contact" class="section contact-section">
+            <div class="container">
+                <h2>Contact</h2>
+                <form id="contact-form" class="form form-contact">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact_name">Nom *</label>
+                            <input type="text" id="contact_name" name="full_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_email">Email *</label>
+                            <input type="email" id="contact_email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_phone">Téléphone</label>
+                        <input type="tel" id="contact_phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_subject">Sujet *</label>
+                        <input type="text" id="contact_subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact_message">Message *</label>
+                        <textarea id="contact_message" name="message" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                    <p id="contact-feedback" class="form-feedback" hidden></p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© AutoLoc – Location de voitures</p>
+        </div>
+    </footer>
+
+    <!-- Modal réservation -->
+    <div id="booking-modal" class="modal" hidden>
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button type="button" class="modal-close" aria-label="Fermer">&times;</button>
+            <h3 id="booking-car-title">Réserver</h3>
+            <form id="booking-form" class="form">
+                <input type="hidden" id="booking_car_id" name="car_id">
+                <div class="form-group">
+                    <label for="booking_name">Nom *</label>
+                    <input type="text" id="booking_name" name="full_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking_email">Email *</label>
+                    <input type="email" id="booking_email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="booking_phone">Téléphone *</label>
+                    <input type="tel" id="booking_phone" name="phone" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="booking_start">Date début *</label>
+                        <input type="date" id="booking_start" name="start_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking_end">Date fin *</label>
+                        <input type="date" id="booking_end" name="end_date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="booking_note">Message (optionnel)</label>
+                    <textarea id="booking_note" name="note" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Mode de paiement *</label>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="online" checked> Paiement en ligne
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cash"> Espèces
+                        </label>
+                    </div>
+                </div>
+                <p id="booking-total" class="booking-total"></p>
+                <button type="submit" class="btn btn-primary">Confirmer la réservation</button>
+                <p id="booking-feedback" class="form-feedback" hidden></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="public/js/script.js"></script>
+</body>
+</html>

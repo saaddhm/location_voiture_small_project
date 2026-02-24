@@ -1,0 +1,136 @@
+Tu es un développeur full-stack. Crée un site vitrine moderne de location de voitures (HTML/CSS/JS) avec un backend PHP natif et une base de données MySQL.
+
+Contraintes:
+- Frontend: HTML/CSS/JS vanilla (modern, responsive)
+- Backend: PHP 8+ , MySQL
+- Pas de framework (pas Laravel, pas Symfony)
+
+Fonctionnalités:
+1) Affichage dynamique des voitures:
+- Les voitures viennent de la base de données (table cars)
+- Endpoint PHP: /api/cars.php retourne JSON (liste + filtre)
+- Filtre JS par type (SUV, berline, eco, luxe)
+
+2) Réservation:
+- Formulaire "Réserver" sur chaque voiture:
+  - nom, email, téléphone, date_debut, date_fin, message (optionnel)
+- Validation JS + validation PHP serveur
+- Enregistrement en DB (table reservations)
+- Retour JSON (succès/erreur) sans rechargement
+- Calcul du total: nb_jours * prix_jour (stocké en DB)
+
+3) Page Admin simple (protégée login):
+- /admin/login.php (table users, mot de passe hashé)
+- /admin/dashboard.php:
+   - liste des réservations
+   - changer statut (pending/confirmed/canceled)
+   - supprimer réservation
+- Pagination simple
+
+4) Contact:
+- Formulaire contact -> DB (table messages)
+- Admin: liste messages
+
+Livrables:
+- Structure de dossier claire
+- SQL de création des tables + données seed (6 voitures)
+- Code complet des fichiers:
+  - config/database.php 
+  - helpers (csrf.php, sanitize.php)
+  - api/cars.php, api/reservations_create.php, api/contact_create.php
+  - admin/login.php, admin/dashboard.php, admin/logout.php, admin/actions.php
+  - JS fetch côté front (script.js)
+- Utiliser des réponses JSON standard {ok:true, data:..., error:...}
+
+
+database:
+CREATE DATABASE IF NOT EXISTS car_rental CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE car_rental;
+
+-- Voitures
+CREATE TABLE cars (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(120) NOT NULL,
+  type ENUM('SUV','Berline','Eco','Luxe') NOT NULL,
+  price_per_day DECIMAL(10,2) NOT NULL,
+  image VARCHAR(255) DEFAULT NULL,
+  seats TINYINT DEFAULT 5,
+  transmission ENUM('Manuelle','Automatique') DEFAULT 'Manuelle',
+  fuel ENUM('Diesel','Essence','Hybride','Electrique') DEFAULT 'Diesel',
+  is_active TINYINT(1) DEFAULT 1,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Réservations
+CREATE TABLE reservations (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  car_id INT NOT NULL,
+  full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  phone VARCHAR(40) NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  days INT NOT NULL,
+  total DECIMAL(10,2) NOT NULL,
+  note TEXT NULL,
+  status ENUM('pending','confirmed','canceled') DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_res_car FOREIGN KEY (car_id) REFERENCES cars(id) ON DELETE CASCADE
+);
+
+-- Messages contact
+CREATE TABLE messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  full_name VARCHAR(120) NOT NULL,
+  email VARCHAR(190) NOT NULL,
+  phone VARCHAR(40) NULL,
+  subject VARCHAR(160) NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Utilisateurs admin
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(80) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Seed: 6 voitures
+INSERT INTO cars (name,type,price_per_day,image,seats,transmission,fuel) VALUES
+('Dacia Sandero','Eco',250.00,'images/cars/sandero.jpg',5,'Manuelle','Essence'),
+('Renault Clio 5','Eco',280.00,'images/cars/clio5.jpg',5,'Manuelle','Diesel'),
+('Hyundai Tucson','SUV',450.00,'images/cars/tucson.jpg',5,'Automatique','Diesel'),
+('Kia Sportage','SUV',470.00,'images/cars/sportage.jpg',5,'Automatique','Diesel'),
+('Mercedes Classe C','Luxe',900.00,'images/cars/mercedes_c.jpg',5,'Automatique','Essence'),
+('BMW Série 3','Luxe',950.00,'images/cars/bmw_3.jpg',5,'Automatique','Essence');
+
+-- Admin par défaut (à générer via PHP, mais exemple):
+-- Remplace le hash par un vrai hash généré par password_hash()
+
+
+Structure conseillée du projet:
+location-voiture/
+├── public/
+│   ├── index.html
+│   ├── css/style.css
+│   ├── js/script.js
+│   └── images/
+├── api/
+│   ├── cars.php
+│   ├── reservations_create.php
+│   └── contact_create.php
+├── admin/
+│   ├── login.php
+│   ├── dashboard.php
+│   ├── logout.php
+│   └── actions.php
+├── config/
+│   └── database.php
+├── includes/
+│   ├── csrf.php
+│   ├── sanitize.php
+│   └── auth.php
+└── sql/
+   └── schema.sql
