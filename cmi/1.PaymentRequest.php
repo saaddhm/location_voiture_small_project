@@ -20,7 +20,7 @@ if (!$row) {
     exit;
 }
 
-$orgClientId  = '600002511'; // ID marchand CMI
+$orgClientId  = '########'; // ID marchand CMI
 $orgAmount = number_format((float) $row['total'], 2, '.', '');
 
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

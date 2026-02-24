@@ -17,7 +17,7 @@
 	<form name="pay_form" method="post" action="https://testpayment.cmi.co.ma/fim/est3Dgate">
 		<?php
 		
-			$storeKey = "Amesip_a2023mesip";
+			$storeKey = "########";
 			
 
 			$postParams = array();
